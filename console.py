@@ -10,6 +10,7 @@ FILENAME_POL = "policy.csv"
 FILENAME_PRO = "profiles.csv"
 FILENAME_FRI = "friends.csv"
 FILENAME_REQ = "requests.csv"
+FILENAME_APP = "applications.csv"
 STORY = "success_story.txt"
 empty_string = " "
 
@@ -423,57 +424,52 @@ def log_in_Screen(name):
     print()
     print("Select one of the below options:")
     print("(1) Post Job")
-    print("(2) Delete Job")
-    print("(3) Search Job")
-    print("(4) Create Profile")
-    print("(5) View Profile")
-    print("(6) Search for friends to connect with")
-    print("(7) Show my network")
-    print("(8) New Skill")
-    print("(9) Useful links")
-    print("(10) Important links")
-    print("(11) Sign Out")
+    print("(2) Search Jobs")
+    print("(3) Create Profile")
+    print("(4) View Profile")
+    print("(5) Search for friends to connect with")
+    print("(6) Show my network")
+    print("(7) New Skill")
+    print("(8) Useful links")
+    print("(9) Important links")
+    print("(10) Sign Out")
     choice = input("Your selection: ")
 
     #check the right value of input from user
-    choice = check.check_option(choice,1,11)
+    choice = check.check_option(choice,1,10)
     
     if(choice == "1"): 
         manage = m.Manage()
         manage.new_job(name)
         log_in_Screen(name)
-    elif (choice == "2"):
-        manage = m.Manage()
-        manage.delete_job(name)
-        log_in_Screen(name)
-    elif(choice == "3"):
+    elif(choice == "2"):
         job_Screen(name)
-    elif(choice == "4"):
+    elif(choice == "3"):
         manage = m.Manage()
         manage.createProfile(name)
         choice = input("\nEnter 1 to return to previous screen: ")
         #check that input has an acceptable value
         choice = check.check_option(choice,1,1)
         log_in_Screen(name)
-    elif(choice == "5"):
+    elif(choice == "4"):
         manage = m.Manage()
         manage.viewProfile(name)
         choice = input("\nEnter 1 to return to previous screen: ")
         #check that input has an acceptable value
         choice = check.check_option(choice,1,1)
         log_in_Screen(name)
-    elif(choice == "6"):
+    elif(choice == "5"):
         student_Search_Console(name)
         log_in_Screen(name)    
-    elif (choice == "7"):
+    elif (choice == "6"):
         show_Network(name)
-    elif(choice == "8"):
+    elif(choice == "7"):
         learnSkill_Screen(name)
-    elif(choice == "9"):
+    elif(choice == "8"):
         usefulLinks_Screen(1,name)
-    elif(choice == "10"):
+    elif(choice == "9"):
         importantLinks_Screen(1, name)
-    elif(choice == "11"):
+    elif(choice == "10"):
         welcomeScreen()
 
 def sign_up_Screen():
@@ -854,43 +850,86 @@ def display_Friend(name):
 ############################## Show and Apply for Jobs Console ##################################
 
 def job_Screen(name):
-    manage = m.Manage()
-    jobs = list()
-    print("The following jobs are currently in the system:")
-    with open(FILENAME_JOB,"r") as file:
-        reader_csv = csv.reader(file)
-        i = 0
-        for row in reader_csv:
-            if row != [] and row != ["Title","Description","Employer","Location","Salary","Post_Name"]:
-                i = i + 1
-                jobs.append(row)
-                print(str(i) + ": " + row[0])
-        job_num = len(jobs)
-    choice = job_num + 1
-    choice_B = 0
-    while(choice != "0"):
-        print("Enter the number of the job you would like to view (and if you wish, save or apply to), or enter '0' to go back")
-        choice = input("Your selection: ")
+    selection = 0
+    while(selection != "5"):
+        print("Enter '1' to search all jobs in the system")
+        print("Enter '2' to view jobs that you have applied for")
+        print("Enter '3' to view jobs that you have not applied for")
+        print("Enter '4' to view saved jobs.")
+        print("Enter '5' to go back.")
+        selection = input("Your selection: ")
         #check that acceptable input was provided by the user
-        choice = check.check_option(choice,0,job_num)
+        selection = check.check_option(selection,1,5)
+        if(selection == "1"): #search all jobs
+            manage = m.Manage()
+            jobs = list()
+            print("The following jobs are currently in the system:")
+            with open(FILENAME_JOB,"r") as file:
+                reader_csv = csv.reader(file)
+                i = 0
+                for row in reader_csv:
+                    if row != [] and row != ["Title","Description","Employer","Location","Salary","Post_Name"]:
+                        i = i + 1
+                        jobs.append(row)
+                        applied = 0
+                        with open(FILENAME_APP,"r") as file:
+                            reader_csv_B = csv.reader(file)
+                            for entry in reader_csv_B:
+                                if entry!= []:
+                                    if (entry[0] == name) and (entry[1] == row[0]) and (entry[2] == row[2]):
+                                        applied = applied + 1
+                        if applied > 0:
+                            print(str(i) + ": " + row[0] + " (Applied)")
+                        else:
+                            print(str(i) + ": " + row[0])
+                job_num = len(jobs)
+            choice = job_num + 1
+            choice_B = 0
+            while(choice != "0"):
+                print("Enter the number of the job you would like to view (and if you wish, save or apply to), or enter '0' to go back")
+                choice = input("Your selection: ")
+                #check that acceptable input was provided by the user
+                choice = check.check_option(choice,0,job_num)
 
-        if(choice != "0"):
-            print(jobs[int(choice)-1][0])
-            print("Employer: " + jobs[int(choice)-1][2])
-            print("Location: " + jobs[int(choice)-1][3])
-            print("Salary: " + jobs[int(choice)-1][4])
-            print("Description: " + jobs[int(choice)-1][1])
-            print()
-            print("Enter '1' to apply for this job, '2' to save it, or '3' to look at a different job")
-            choice_B = input("Your selection: ")
-            choice_B = check.check_option(choice_B,1,3)
-            if (choice_B == "1"): #Application
-                print("Under Construction")
-            elif (choice_B == "2"): #Save
-                print("Under Construction")
-
-    log_in_Screen(name)
-
+                if(choice != "0"):
+                    print(jobs[int(choice)-1][0])
+                    print("Employer: " + jobs[int(choice)-1][2])
+                    print("Location: " + jobs[int(choice)-1][3])
+                    print("Salary: " + jobs[int(choice)-1][4])
+                    print("Description: " + jobs[int(choice)-1][1])
+                    print()
+                    print("Enter '1' to apply for this job, '2' to save it, or '3' to go back")
+                    choice_B = input("Your selection: ")
+                    choice_B = check.check_option(choice_B,1,3)
+                    if (choice_B == "1"): #Application
+                        applied = 0
+                        with open(FILENAME_APP,"r") as file:
+                            reader_csv_C = csv.reader(file)
+                            for entry in reader_csv_C:
+                                if entry!= []:
+                                    if (entry[0] == name) and (entry[1] == jobs[int(choice)-1][0]) and (entry[2] == jobs[int(choice)-1][2]):
+                                        applied = applied + 1
+                        if applied > 0:
+                            print("You have already applied to that job")
+                        else:
+                            manage.add_application(name, jobs[int(choice)-1][0], jobs[int(choice)-1][2])
+                    elif (choice_B == "2"): #Save
+                        manage.add_save_job(name,jobs[int(choice)-1][0])
+        elif(selection == "2"): #view jobs applied to
+            print("You have applied to the following jobs:")
+            with open(FILENAME_APP,"r") as file:
+                reader_csv = csv.reader(file)
+                i = 0
+                for row in reader_csv:
+                    if row != [] and row[0] == name:
+                        print(row[1] + " at " + row[2])
+        elif(selection == "3"): #view jobs not applied to
+            print("Under Construction")
+        elif(selection == "4"): #view saved jobs
+            manage = m.Manage()
+            manage.display_save_job(name)
+        elif(selection == "5"): #return
+            log_in_Screen(name)
 
 ############################## End of Show and Apply for Jobs Console ##################################
 
