@@ -422,49 +422,58 @@ def log_in_Screen(name):
 
     print()
     print("Select one of the below options:")
-    #print("(1) Post Job")
-    print("(1) Job")
-    print("(2) Create Profile")
-    print("(3) View Profile")
-    print("(4) Search for friends to connect with")
-    print("(5) Show my network")
-    print("(6) New Skill")
-    print("(7) Useful links")
-    print("(8) Important links")
-    print("(9) Sign Out")
+    print("(1) Post Job")
+    print("(2) Delete Job")
+    print("(3) Search Job")
+    print("(4) Create Profile")
+    print("(5) View Profile")
+    print("(6) Search for friends to connect with")
+    print("(7) Show my network")
+    print("(8) New Skill")
+    print("(9) Useful links")
+    print("(10) Important links")
+    print("(11) Sign Out")
     choice = input("Your selection: ")
 
     #check the right value of input from user
-    choice = check.check_option(choice,1,10)
+    choice = check.check_option(choice,1,11)
     
-    if(choice == "1"):
+    if(choice == "1"): 
+        manage = m.Manage()
+        manage.new_job(name)
+        log_in_Screen(name)
+    elif (choice == "2"):
+        manage = m.Manage()
+        manage.delete_job(name)
+        log_in_Screen(name)
+    elif(choice == "3"):
         job_Screen(name)
-    elif(choice == "2"):
+    elif(choice == "4"):
         manage = m.Manage()
         manage.createProfile(name)
         choice = input("\nEnter 1 to return to previous screen: ")
         #check that input has an acceptable value
         choice = check.check_option(choice,1,1)
         log_in_Screen(name)
-    elif(choice == "3"):
+    elif(choice == "5"):
         manage = m.Manage()
         manage.viewProfile(name)
         choice = input("\nEnter 1 to return to previous screen: ")
         #check that input has an acceptable value
         choice = check.check_option(choice,1,1)
         log_in_Screen(name)
-    elif(choice == "4"):
+    elif(choice == "6"):
         student_Search_Console(name)
         log_in_Screen(name)    
-    elif (choice == "5"):
+    elif (choice == "7"):
         show_Network(name)
-    elif(choice == "6"):
-        learnSkill_Screen(name)
-    elif(choice == "7"):
-        usefulLinks_Screen(1,name)
     elif(choice == "8"):
-        importantLinks_Screen(1, name)
+        learnSkill_Screen(name)
     elif(choice == "9"):
+        usefulLinks_Screen(1,name)
+    elif(choice == "10"):
+        importantLinks_Screen(1, name)
+    elif(choice == "11"):
         welcomeScreen()
 
 def sign_up_Screen():
@@ -845,61 +854,42 @@ def display_Friend(name):
 ############################## Show and Apply for Jobs Console ##################################
 
 def job_Screen(name):
-
-    #daniel
-    print()
-    print("Select one of the below options:")
-    print("(1) Post Job")
-    print("(2) Search Job")
-    print("(3) Go back to previous screen: Log in")
-    choice = input("Your selection: ")
-    #check the right value of input from user
-    choice = check.check_option(choice,1,3)
-
-    if choice == "1":
-        manage = m.Manage()
-        manage.new_job(name)
-        job_Screen(name)
-    elif choice == "2":
-        manage = m.Manage()
-        jobs = list()
-        print("The following jobs are currently in the system:")
-        with open(FILENAME_JOB,"r") as file:
-            reader_csv = csv.reader(file)
-            i = 0
-            for row in reader_csv:
-                if row != [] and  row != ["Title","Description","Employer","Location","Salary","Post_Name"]:
-                    i = i + 1
-                    jobs.append(row)
-                    print(str(i) + ": " + row[0])
-        
+    manage = m.Manage()
+    jobs = list()
+    print("The following jobs are currently in the system:")
+    with open(FILENAME_JOB,"r") as file:
+        reader_csv = csv.reader(file)
+        i = 0
+        for row in reader_csv:
+            if row != [] and row != ["Title","Description","Employer","Location","Salary","Post_Name"]:
+                i = i + 1
+                jobs.append(row)
+                print(str(i) + ": " + row[0])
         job_num = len(jobs)
-        choice = job_num + 1
-        choice_B = 0
-        while(choice != "0"):
-            print("Enter the number of the job you would like to view (and if you wish, save or apply to), or enter '0' to go back")
-            choice = input("Your selection: ")
-            #check that acceptable input was provided by the user
-            choice = check.check_option(choice,0,job_num)
+    choice = job_num + 1
+    choice_B = 0
+    while(choice != "0"):
+        print("Enter the number of the job you would like to view (and if you wish, save or apply to), or enter '0' to go back")
+        choice = input("Your selection: ")
+        #check that acceptable input was provided by the user
+        choice = check.check_option(choice,0,job_num)
 
-            if(choice != "0"):
-                print(jobs[int(choice)-1][0])
-                print("Employer: " + jobs[int(choice)-1][2])
-                print("Location: " + jobs[int(choice)-1][3])
-                print("Salary: " + jobs[int(choice)-1][4])
-                print("Description: " + jobs[int(choice)-1][1])
-                print()
-                print("Enter '1' to apply for this job, '2' to save it, or '3' to look at a different job")
-                choice_B = input("Your selection: ")
-                choice_B = check.check_option(choice_B,1,3)
-                if (choice_B == "1"): #Application
-                    print("Under Construction")
-                elif (choice_B == "2"): #Save
-                    print("Under Construction")
+        if(choice != "0"):
+            print(jobs[int(choice)-1][0])
+            print("Employer: " + jobs[int(choice)-1][2])
+            print("Location: " + jobs[int(choice)-1][3])
+            print("Salary: " + jobs[int(choice)-1][4])
+            print("Description: " + jobs[int(choice)-1][1])
+            print()
+            print("Enter '1' to apply for this job, '2' to save it, or '3' to look at a different job")
+            choice_B = input("Your selection: ")
+            choice_B = check.check_option(choice_B,1,3)
+            if (choice_B == "1"): #Application
+                print("Under Construction")
+            elif (choice_B == "2"): #Save
+                print("Under Construction")
 
-        job_Screen(name)
-    elif choice == "3":
-        log_in_Screen(name)
+    log_in_Screen(name)
 
 
 ############################## End of Show and Apply for Jobs Console ##################################

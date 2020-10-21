@@ -455,6 +455,22 @@ class Manage:
                         print("Friend request has already been sent or accepted")
 
 
+    def delete_job(self, name):
+        self.__list_job.clear()
+        with open (FILENAME_JOB, "r") as file:
+            reader_csv = csv.reader(file)
+            for row in reader_csv:
+                if row != [] and row [5] != name:
+                    self.__list_job.append(j.Job(row[0],row[1],row[2],row[3],row[4],row[5]))
+
+        with open (FILENAME_JOB, "w") as file:
+            writer_csv = csv.writer(file)
+            for element in self.__list_job:
+                writer_csv.writerow((element.get_title(),element.get_description(),element.get_employer(),element.get_location(),element.get_salary(), element.get_post_name()))
+
+
+
+
 def valiDate(date_text):
     try:
         datetime.strptime(date_text, '%m/%d/%Y')
