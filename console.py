@@ -420,56 +420,62 @@ def learnSkill_Screen(name):
 def log_in_Screen(name):
     
     check_requests(name)
+    check_application(name)
 
     print()
     print("Select one of the below options:")
     print("(1) Post Job")
-    print("(2) Search Jobs")
-    print("(3) Create Profile")
-    print("(4) View Profile")
-    print("(5) Search for friends to connect with")
-    print("(6) Show my network")
-    print("(7) New Skill")
-    print("(8) Useful links")
-    print("(9) Important links")
-    print("(10) Sign Out")
+    print("(2) Delete Job")
+    print("(3) Search Jobs")
+    print("(4) Create Profile")
+    print("(5) View Profile")
+    print("(6) Search for friends to connect with")
+    print("(7) Show my network")
+    print("(8) New Skill")
+    print("(9) Useful links")
+    print("(10) Important links")
+    print("(11) Sign Out")
     choice = input("Your selection: ")
 
     #check the right value of input from user
-    choice = check.check_option(choice,1,10)
+    choice = check.check_option(choice,1,11)
     
     if(choice == "1"): 
         manage = m.Manage()
         manage.new_job(name)
         log_in_Screen(name)
-    elif(choice == "2"):
-        job_Screen(name)
+    elif (choice == "2"):
+        manage = m.Manage()
+        manage.delete_job(name)
+        log_in_Screen(name)
     elif(choice == "3"):
+        job_Screen(name)
+    elif(choice == "4"):
         manage = m.Manage()
         manage.createProfile(name)
         choice = input("\nEnter 1 to return to previous screen: ")
         #check that input has an acceptable value
         choice = check.check_option(choice,1,1)
         log_in_Screen(name)
-    elif(choice == "4"):
+    elif(choice == "5"):
         manage = m.Manage()
         manage.viewProfile(name)
         choice = input("\nEnter 1 to return to previous screen: ")
         #check that input has an acceptable value
         choice = check.check_option(choice,1,1)
         log_in_Screen(name)
-    elif(choice == "5"):
+    elif(choice == "6"):
         student_Search_Console(name)
         log_in_Screen(name)    
-    elif (choice == "6"):
+    elif (choice == "7"):
         show_Network(name)
-    elif(choice == "7"):
-        learnSkill_Screen(name)
     elif(choice == "8"):
-        usefulLinks_Screen(1,name)
+        learnSkill_Screen(name)
     elif(choice == "9"):
-        importantLinks_Screen(1, name)
+        usefulLinks_Screen(1,name)
     elif(choice == "10"):
+        importantLinks_Screen(1, name)
+    elif(choice == "11"):
         welcomeScreen()
 
 def sign_up_Screen():
@@ -924,13 +930,110 @@ def job_Screen(name):
                     if row != [] and row[0] == name:
                         print(row[1] + " at " + row[2])
         elif(selection == "3"): #view jobs not applied to
-            print("Under Construction")
+            list_application = [] #keep title of applications of the user
+            with open (FILENAME_APP, "r") as file:
+                reader_csv = csv.reader(file)
+                for row in reader_csv:
+                    if row != [] and row [0] == name:
+                        list_application.append(row[1])
+
+            list_job = [] # keep title of job in the system.
+            with open (FILENAME_JOB, "r") as file:
+                reader_csv = csv.reader(file)
+                for row in reader_csv:
+                    if row != [] and row != ["Title","Description","Employer","Location","Salary","Post_Name"]:
+                        list_job.append(row[0])
+            
+            count = 0
+            for element in list_job:
+                if element not in list_application:
+                    count +=1
+                    print(str(count) + ": " + element)
+
         elif(selection == "4"): #view saved jobs
             manage = m.Manage()
-            manage.display_save_job(name)
+            list_save_job = manage.list_save_job(name)
+            if len(list_save_job) != 0:               
+                count = 0
+                for element in list_save_job:
+                    count +=1
+                    print (str(count) + ": " + element)
+            else:
+                print("You don't have any saved job")
+            
+            if len(list_save_job) != 0:
+
+                print("Do you want to unmark a job in saved jobs?")
+                print("Select one of the below option:")
+                print("(1) Unmark")
+                print("(2) Keep saved jobs")
+                choice = input("Your selection: ")
+                #check the right value of input from user
+                choice = check.check_option(choice,1,2)
+
+                if (choice == "1"):
+                    for element in list_save_job:
+                        print()
+                        print("Do you want to unmark the job that has the title " + "\"" + element + "\"")
+                        print("Select one of the below option:")
+                        print("(1) Yes")
+                        print("(2) No")
+                        choice = input("Your selection: ")
+                        #check the right value of input from user
+                        choice = check.check_option(choice,1,2)
+                        if (choice == "1"):
+                            manage.delete_save_job(name,element)
+                        else:
+                            pass
+
+                elif (choice == "2"):
+                    pass
+  
         elif(selection == "5"): #return
             log_in_Screen(name)
 
 ############################## End of Show and Apply for Jobs Console ##################################
 
          
+######################### begin check_application ############
+def check_application(name):
+        list_application = [] #keep title of applications of the user
+        with open (FILENAME_APP, "r") as file:
+            reader_csv = csv.reader(file)
+            for row in reader_csv:
+                if row != [] and row [0] == name:
+                    list_application.append(row[1])
+        
+        list_job = [] # keep title of job in the system.
+        with open (FILENAME_JOB, "r") as file:
+            reader_csv = csv.reader(file)
+            for row in reader_csv:
+                if row != [] and row != ["Title","Description","Employer","Location","Salary","Post_Name"]:
+                    list_job.append(row[0])
+        
+        for element in list_application:
+            if element not in list_job:
+                print()
+                print("The job with title " + "\"" + element + "\""+ " is removed")
+                delete_application(name,element)
+
+
+######################### end check_application ###############
+
+
+######################### begin delete_application #####################
+def delete_application(name, title):
+    
+    st = []
+    with open(FILENAME_APP,"r") as file:
+        reader_csv = csv.reader(file)
+        for row in reader_csv:
+            if row != [] and (row[0] != name or row[1] != title):
+                st.append(tuple(row))
+
+    with open(FILENAME_APP,"w") as file:
+        writer_csv = csv.writer(file)
+        for element in st:
+            writer_csv.writerow(element)
+
+######################## end delete_application ##############

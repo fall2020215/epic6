@@ -36,6 +36,7 @@ class Manage:
         ######################################### begin ########
         
         self.__list_save_job = []
+        
 
         if not os.path.isfile(FILENAME_SAVE_JOB):
             with open(FILENAME_SAVE_JOB,"w") as file:
@@ -138,20 +139,43 @@ class Manage:
 
         return True
 
-    def display_save_job(self,name):
-        count = 0
+    def list_save_job(self,name):
+        list_save_job = []
         with open(FILENAME_SAVE_JOB,"r") as file:
             reader_csv = csv.reader(file)
             for row in reader_csv:
                 if row != [] and row[0] == name:
-                    count += 1
-                    print(str(count) + ": " + row[1])
+                    list_save_job.append(row[1])
+                    
+        return list_save_job
+
+    def delete_job(self, name):
+        self.__list_job.clear()
+        with open (FILENAME_JOB, "r") as file:
+            reader_csv = csv.reader(file)
+            for row in reader_csv:
+                if row != [] and row [5] != name:
+                    self.__list_job.append(j.Job(row[0],row[1],row[2],row[3],row[4],row[5]))
+
+        with open (FILENAME_JOB, "w") as file:
+            writer_csv = csv.writer(file)
+            for element in self.__list_job:
+                writer_csv.writerow((element.get_title(),element.get_description(),element.get_employer(),element.get_location(),element.get_salary(), element.get_post_name()))
+
+    def delete_save_job(self, name, title):
+        self.__list_save_job.clear()
+        with open (FILENAME_SAVE_JOB, "r") as file:
+            reader_csv = csv.reader(file)
+            for row in reader_csv:
+                if row != [] and (row [0] != name or row[1] != title):
+                    self.__list_save_job.append(sa.Save(row[0],row[1]))
+
+        with open (FILENAME_SAVE_JOB, "w") as file:
+            writer_csv = csv.writer(file)
+            for element in self.__list_save_job:
+                writer_csv.writerow((element.get_username(),element.get_title()))
 
 
-    
-
-
-    
 
     ####################### end -- add save job #####################
 
