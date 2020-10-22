@@ -1003,6 +1003,7 @@ def check_application(name):
             for row in reader_csv:
                 if row != [] and row [0] == name:
                     list_application.append(row[1])
+       
         
         list_job = [] # keep title of job in the system.
         with open (FILENAME_JOB, "r") as file:
@@ -1010,6 +1011,8 @@ def check_application(name):
             for row in reader_csv:
                 if row != [] and row != ["Title","Description","Employer","Location","Salary","Post_Name"]:
                     list_job.append(row[0])
+
+     
         
         for element in list_application:
             if element not in list_job:
@@ -1037,3 +1040,4 @@ def delete_application(name, title):
             writer_csv.writerow(element)
 
 ######################## end delete_application ##############
+

@@ -124,6 +124,18 @@ class Manage:
     ####################### begin - add save job ###################
 
     def add_save_job(self,username,title):
+
+        list_application = [] #keep title of applications of the user
+        with open (FILENAME_APP, "r") as file:
+            reader_csv = csv.reader(file)
+            for row in reader_csv:
+                if row != [] and row [0] == username:
+                    list_application.append(row[1])
+        
+        for element in list_application:
+            if element == title:
+                print("You have already applied to this job! Don't need to save the job!")
+                return False
         
         for element in self.__list_save_job:
             if element.get_username() == username and element.get_title() == title:
@@ -150,10 +162,13 @@ class Manage:
         return list_save_job
 
     def delete_job(self, name):
+        title = ""
         self.__list_job.clear()
         with open (FILENAME_JOB, "r") as file:
             reader_csv = csv.reader(file)
             for row in reader_csv:
+                if row != [] and row [5] == name:
+                    title  = row[0] #get title from username who post a job
                 if row != [] and row [5] != name:
                     self.__list_job.append(j.Job(row[0],row[1],row[2],row[3],row[4],row[5]))
 
@@ -161,6 +176,20 @@ class Manage:
             writer_csv = csv.writer(file)
             for element in self.__list_job:
                 writer_csv.writerow((element.get_title(),element.get_description(),element.get_employer(),element.get_location(),element.get_salary(), element.get_post_name()))
+
+        #should delete the rows in save_job.csv that relative to the job deleted
+        print(title)
+        self.__list_save_job.clear()
+        with open (FILENAME_SAVE_JOB, "r") as file:
+            reader_csv = csv.reader(file)
+            for row in reader_csv:
+                if row != [] and row [1] != title:
+                    self.__list_save_job.append(sa.Save(row[0],row[1]))
+
+        with open (FILENAME_SAVE_JOB, "w") as file:
+            writer_csv = csv.writer(file)
+            for element in self.__list_save_job:
+                writer_csv.writerow((element.get_username(), element.get_title()))
 
     def delete_save_job(self, name, title):
         self.__list_save_job.clear()
