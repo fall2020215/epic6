@@ -33,7 +33,7 @@ class Manage:
         self.__list_settings = []
         self.__list_profiles = []
 
-        ######################################### begin ########
+        ######################################### begin - Thinh #############################
         
         self.__list_save_job = []
         
@@ -43,7 +43,7 @@ class Manage:
                 writer_csv = csv.writer(file)
                 writer_csv.writerow(("User_Name","Title"))
 
-        #add data from student_data.csv to __self.__list_student
+       
         with open(FILENAME_SAVE_JOB,"r") as file:
             reader_csv = csv.reader(file)
             for row in reader_csv:
@@ -57,7 +57,7 @@ class Manage:
 
         
 
-        ######################################## end ############
+        ######################################## end - Thinh ######################################
 
         #add title for the student_data.csv
         if not os.path.isfile(FILENAME):
@@ -121,7 +121,7 @@ class Manage:
         return len(self.__list_student)
 
 
-    ####################### begin - add save job ###################
+    ####################### begin - job - Thinh ###################
 
     def add_save_job(self,username,title):
 
@@ -206,7 +206,7 @@ class Manage:
 
 
 
-    ####################### end -- add save job #####################
+    ####################### end - job - Thinh ##################################################
 
             
     # add a new object student with given first, last name and password to student_data.csv file 

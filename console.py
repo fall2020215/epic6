@@ -929,6 +929,8 @@ def job_Screen(name):
                 for row in reader_csv:
                     if row != [] and row[0] == name:
                         print(row[1] + " at " + row[2])
+
+        ######################################### begin - Thinh ####################################
         elif(selection == "3"): #view jobs not applied to
             list_application = [] #keep title of applications of the user
             with open (FILENAME_APP, "r") as file:
@@ -988,14 +990,14 @@ def job_Screen(name):
 
                 elif (choice == "2"):
                     pass
-  
+        ############################### end -Thinh ###################################
         elif(selection == "5"): #return
             log_in_Screen(name)
 
 ############################## End of Show and Apply for Jobs Console ##################################
 
          
-######################### begin check_application ############
+######################### begin check_application - Thinh ############
 def check_application(name):
         list_application = [] #keep title of applications of the user
         with open (FILENAME_APP, "r") as file:
@@ -1021,10 +1023,10 @@ def check_application(name):
                 delete_application(name,element)
 
 
-######################### end check_application ###############
+######################### end check_application - Thinh ###############
 
 
-######################### begin delete_application #####################
+######################### begin delete_application - Thinh #####################
 def delete_application(name, title):
     
     st = []
@@ -1039,5 +1041,5 @@ def delete_application(name, title):
         for element in st:
             writer_csv.writerow(element)
 
-######################## end delete_application ##############
+######################## end delete_application - Thinh ##############
 
