@@ -446,7 +446,33 @@ def log_in_Screen(name):
         log_in_Screen(name)
     elif (choice == "2"):
         manage = m.Manage()
-        manage.delete_job(name)
+        list_title_job = [] # keep the titles of jobs that the user posted
+        for element in manage.get_list_job():
+            if element.get_post_name() == name:
+                list_title_job.append(element.get_title())
+        
+        if len(list_title_job) != 0:
+            print("\nThis is the list of jobs that you posted: ")
+            count = 0
+            for element in list_title_job:
+                count +=1
+                print(str(count) + ": " + element)
+            
+            for element in list_title_job:
+                print()
+                print("Do you want to delete the job with title: " + "\"" +element + "\"")
+                print ("Select one of the below option:")
+                print("(1) Yes")
+                print("(2) No")
+                choice = input("Your selection: ")
+                #check the right value of input from user
+                choice = check.check_option(choice,1,2)
+                if choice == "1":
+                    manage.delete_job(name, element)
+                else:
+                    pass
+        else:
+            print("You didn't post any job in the system!")      
         log_in_Screen(name)
     elif(choice == "3"):
         job_Screen(name)

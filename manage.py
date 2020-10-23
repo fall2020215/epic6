@@ -123,6 +123,9 @@ class Manage:
 
     ####################### begin - job - Thinh ###################
 
+    def get_list_job (self):
+        return self.__list_job
+
     def add_save_job(self,username,title):
 
         list_application = [] #keep title of applications of the user
@@ -161,15 +164,12 @@ class Manage:
                     
         return list_save_job
 
-    def delete_job(self, name):
-        title = ""
+    def delete_job(self, name, title):
         self.__list_job.clear()
         with open (FILENAME_JOB, "r") as file:
             reader_csv = csv.reader(file)
             for row in reader_csv:
-                if row != [] and row [5] == name:
-                    title  = row[0] #get title from username who post a job
-                if row != [] and row [5] != name:
+                if row != [] and (row [5] != name or row [0] != title):
                     self.__list_job.append(j.Job(row[0],row[1],row[2],row[3],row[4],row[5]))
 
         with open (FILENAME_JOB, "w") as file:
@@ -334,7 +334,7 @@ class Manage:
         
         title = input("Enter Title: ")
         description = input("Enter Description: ")
-        employer = input("Enter Emplyer: ")
+        employer = input("Enter Employer: ")
         location = input("Enter Location: ")
         salary = input("Salary: ")
 
